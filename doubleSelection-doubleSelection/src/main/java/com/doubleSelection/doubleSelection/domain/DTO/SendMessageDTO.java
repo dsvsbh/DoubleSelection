@@ -13,7 +13,7 @@ public class SendMessageDTO {
     @NotEmpty
     private Long senderId;
     @NotEmpty
-    private Long receiveId;
+    private Long receiverId;
     @NotEmpty
     private String messageContent;
 }

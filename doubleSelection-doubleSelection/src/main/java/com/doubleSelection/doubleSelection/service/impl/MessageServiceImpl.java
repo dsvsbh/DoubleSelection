@@ -29,7 +29,7 @@ public class MessageServiceImpl implements IMessageService {
         {
             throw new RuntimeException("发送者id不能为空");
         }
-        if(sendMessageDTO.getReceiveId()==null)
+        if(sendMessageDTO.getReceiverId()==null)
         {
             throw new RuntimeException("接受者id不能为空");
         }
@@ -43,7 +43,7 @@ public class MessageServiceImpl implements IMessageService {
         }
         Message message = new Message();
         message.setSenderId(sendMessageDTO.getSenderId());
-        message.setReceiverId(sendMessageDTO.getReceiveId());
+        message.setReceiverId(sendMessageDTO.getReceiverId());
         message.setMessageContent(sendMessageDTO.getMessageContent());
         message.setSentTime(new Date());
         message.setIsRead(false);
