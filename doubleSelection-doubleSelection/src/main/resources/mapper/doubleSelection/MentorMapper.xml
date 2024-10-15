@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doubleSelection.doubleSelection.mapper.MentorMapper">
+    
+    <resultMap type="Mentor" id="MentorResult">
+        <result property="mentorId"    column="mentor_id"    />
+        <result property="name"    column="name"    />
+        <result property="email"    column="email"    />
+        <result property="password"    column="password"    />
+        <result property="researchArea"    column="research_area"    />
+        <result property="studentLimit"    column="student_limit"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectMentorVo">
+        select mentor_id, name, email, password, research_area, student_limit, create_time, update_time from mentor
+    </sql>
+
+    <select id="selectMentorList" parameterType="Mentor" resultMap="MentorResult">
+        <include refid="selectMentorVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="researchArea != null  and researchArea != ''"> and research_area like concat('%', #{researchArea}, '%')</if>
+            <if test="studentLimit != null "> and student_limit = #{studentLimit}</if>
+        </where>
+    </select>
+    
+    <select id="selectMentorByMentorId" parameterType="Long" resultMap="MentorResult">
+        <include refid="selectMentorVo"/>
+        where mentor_id = #{mentorId}
+    </select>
+
+    <insert id="insertMentor" parameterType="Mentor" useGeneratedKeys="true" keyProperty="mentorId">
+        insert into mentor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mentorId != null">mentor_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="password != null">password,</if>
+            <if test="researchArea != null and researchArea != ''">research_area,</if>
+            <if test="studentLimit != null">student_limit,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mentorId != null and mentorId != ''">#{mentorId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="password != null">#{password},</if>
+            <if test="researchArea != null and researchArea != ''">#{researchArea},</if>
+            <if test="studentLimit != null">#{studentLimit},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+    <insert id="insert">insert into mentor ()</insert>
+
+    <update id="updateMentor" parameterType="Mentor">
+        update mentor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="researchArea != null and researchArea != ''">research_area = #{researchArea},</if>
+            <if test="studentLimit != null">student_limit = #{studentLimit},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where mentor_id = #{mentorId}
+    </update>
+
+    <delete id="deleteMentorByMentorId" parameterType="Long">
+        delete from mentor where mentor_id = #{mentorId}
+    </delete>
+
+    <delete id="deleteMentorByMentorIds" parameterType="String">
+        delete from mentor where mentor_id in 
+        <foreach item="mentorId" collection="array" open="(" separator="," close=")">
+            #{mentorId}
+        </foreach>
+    </delete>
+</mapper>

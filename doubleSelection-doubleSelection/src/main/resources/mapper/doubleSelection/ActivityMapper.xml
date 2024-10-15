@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doubleSelection.doubleSelection.mapper.ActivityMapper">
+    <insert id="insert">
+        insert into activity (name, description, create_time, end_time) values (#{name}, #{description}, #{createTime}, #{endTime})
+    </insert>
+
+
+    <select id="selectConflictActivity" resultType="com.doubleSelection.doubleSelection.domain.Activity">
+        select id, name, description, create_time as createTime, end_time as endTime from activity where create_time between #{createTime} and #{endTime} or end_time between #{createTime} and #{endTime}
+    </select>
+    <select id="listAll" resultType="com.doubleSelection.doubleSelection.domain.Activity">
+        select id, name, description, create_time as createTime, end_time as endTime from activity
+    </select>
+    <select id="getCurrent" resultType="com.doubleSelection.doubleSelection.domain.Activity">
+        select id, name, description, create_time as createTime, end_time as endTime from activity where create_time &lt;= #{now}   and end_time  &gt;= #{now}
+    </select>
+    <select id="list" resultType="com.doubleSelection.doubleSelection.domain.Activity">
+    select id, name, description, create_time as createTime, end_time as endTime from activity
+    <where>
+    <if test="name != null and name != ''"> name like concat('%', #{name}, '%')</if>
+    <if test="endTime != null"> and end_time &lt;= #{endTime}</if>
+    <if test="createTime != null"> and create_time &gt;= #{createTime}</if>
+    </where>
+    order by create_time desc
+    </select>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doubleSelection.doubleSelection.mapper.MessageMapper">
+
+    <insert id="insert" parameterType="com.doubleSelection.doubleSelection.domain.Message" keyProperty="message_id" useGeneratedKeys="true">
+        insert into message (sender_id, receiver_id, message_content, sent_time, is_read) values (#{senderId}, #{receiverId}, #{messageContent}, #{sentTime}, #{isRead})
+    </insert>
+    <update id="updateById" parameterType="com.doubleSelection.doubleSelection.domain.Message">
+        update message
+        <set>
+            <if test="senderId != null">
+                sender_id = #{senderId},
+            </if>
+            <if test="receiverId != null">
+                receiver_id = #{receiverId},
+            </if>
+            <if test="messageContent != null">
+                message_content = #{messageContent},
+            </if>
+            <if test="sentTime != null">
+                sent_time = #{sentTime},
+            </if>
+            <if test="isRead != null">
+                is_read = #{isRead},
+            </if>
+        </set>
+        where message_id=#{messageId}
+    </update>
+    <select id="list" resultType="com.doubleSelection.doubleSelection.domain.Message"
+            parameterType="com.doubleSelection.doubleSelection.domain.DTO.MessageListDTO">
+        select message_id as messageId, sender_id as senderId, receiver_id as receiverId, message_content as messageContent, sent_time as sentTime, is_read as isRead from message
+        <where>
+            <if test="senderId != null">
+                and sender_id = #{senderId}
+            </if>
+            <if test="isRead != null">
+                and is_read = #{isRead}
+            </if>
+            <if test="receiverId!=null">
+            and receiver_id = #{receiverId}
+            </if>
+        </where>
+        order by sent_time desc
+    </select>
+    <select id="getById" resultType="com.doubleSelection.doubleSelection.domain.Message"
+            parameterType="java.lang.Long">
+        select message_id as messageId, sender_id as senderId, receiver_id as receiverId, message_content as messageContent, sent_time as sentTime, is_read as isRead from message
+        where message_id = #{messageId}
+    </select>
+</mapper>
