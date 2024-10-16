@@ -4,10 +4,14 @@ import com.doubleSelection.common.utils.SecurityUtils;
 import com.doubleSelection.common.utils.StringUtils;
 import com.doubleSelection.doubleSelection.domain.DTO.MessageListDTO;
 import com.doubleSelection.doubleSelection.domain.DTO.SendMessageDTO;
+import com.doubleSelection.doubleSelection.domain.Mentor;
 import com.doubleSelection.doubleSelection.domain.Message;
 import com.doubleSelection.doubleSelection.domain.PageResult;
+import com.doubleSelection.doubleSelection.domain.Student;
 import com.doubleSelection.doubleSelection.domain.VO.MessageListVO;
+import com.doubleSelection.doubleSelection.mapper.MentorMapper;
 import com.doubleSelection.doubleSelection.mapper.MessageMapper;
+import com.doubleSelection.doubleSelection.mapper.StudentMapper;
 import com.doubleSelection.doubleSelection.service.IMessageService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements IMessageService {
     private final MessageMapper messageMapper;
+    private final StudentMapper studentMapper;
+    private final MentorMapper mentorMapper;
     @Override
     public String sendMessage(SendMessageDTO sendMessageDTO) {
         if(sendMessageDTO.getSenderId()==null)
@@ -69,6 +75,17 @@ public class MessageServiceImpl implements IMessageService {
                 .records(list.stream().map(message -> {
                     MessageListVO messageListVO = new MessageListVO();
                     BeanUtils.copyProperties(message, messageListVO);
+                    Long senderId = message.getSenderId();
+                    Student student = studentMapper.selectStudentByStudentId(senderId);
+                    Mentor mentor = mentorMapper.selectMentorByMentorId(senderId);
+                    if(student!=null)
+                    {
+                        messageListVO.setSenderName(student.getName());
+                    }
+                    if(mentor!=null)
+                    {
+                        messageListVO.setSenderName(mentor.getName());
+                    }
                     return messageListVO;
                 }).collect(Collectors.toList()))
                 .build();
@@ -81,7 +98,7 @@ public class MessageServiceImpl implements IMessageService {
             throw new RuntimeException("消息id不能为空");
         }
         Message message=messageMapper.getById(messageId);
-        if(message.getIsRead()==false)
+        if(!message.getIsRead())
         {
             message.setIsRead(true);
             messageMapper.updateById(message);
