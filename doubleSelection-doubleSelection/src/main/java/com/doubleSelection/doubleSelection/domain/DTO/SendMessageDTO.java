@@ -10,10 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SendMessageDTO {
-    @NotEmpty
     private Long senderId;
-    @NotEmpty
     private Long receiverId;
-    @NotEmpty
     private String messageContent;
 }
