@@ -31,10 +31,7 @@ public class MessageServiceImpl implements IMessageService {
     private final MentorMapper mentorMapper;
     @Override
     public String sendMessage(SendMessageDTO sendMessageDTO) {
-        if(sendMessageDTO.getSenderId()==null)
-        {
-            throw new RuntimeException("发送者id不能为空");
-        }
+        sendMessageDTO.setSenderId(SecurityUtils.getLoginUser().getUserId());
         if(sendMessageDTO.getReceiverId()==null)
         {
             throw new RuntimeException("接受者id不能为空");
