@@ -7,7 +7,7 @@ import com.doubleSelection.doubleSelection.domain.PageResult;
 import com.doubleSelection.doubleSelection.domain.VO.MessageListVO;
 
 public interface IMessageService {
-    String sendMessage(SendMessageDTO sendMessageDTO);
+    void sendMessage(SendMessageDTO sendMessageDTO);
 
     PageResult<MessageListVO> messageList(MessageListDTO dto);
 

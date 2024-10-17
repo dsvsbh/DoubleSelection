@@ -30,7 +30,7 @@ public class MessageServiceImpl implements IMessageService {
     private final StudentMapper studentMapper;
     private final MentorMapper mentorMapper;
     @Override
-    public String sendMessage(SendMessageDTO sendMessageDTO) {
+    public void sendMessage(SendMessageDTO sendMessageDTO) {
         sendMessageDTO.setSenderId(SecurityUtils.getLoginUser().getUserId());
         if(sendMessageDTO.getReceiverId()==null)
         {
@@ -51,7 +51,6 @@ public class MessageServiceImpl implements IMessageService {
         message.setSentTime(new Date());
         message.setIsRead(false);
         messageMapper.insert(message);
-        return message.getMessageId().toString();
     }
 
     @Override

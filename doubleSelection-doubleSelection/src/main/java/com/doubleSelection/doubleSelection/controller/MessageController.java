@@ -36,9 +36,9 @@ public class MessageController {
      */
    @PostMapping("/sendMessage")
    @ApiOperation(value = "发送留言")
-    public String sendMessage(@RequestBody SendMessageDTO sendMessageDTO)
+    public void sendMessage(@RequestBody SendMessageDTO sendMessageDTO)
    {
-       return messageService.sendMessage(sendMessageDTO);
+       messageService.sendMessage(sendMessageDTO);
    }
 
     /**
