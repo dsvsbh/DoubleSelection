@@ -42,7 +42,6 @@
 
         <el-table v-loading="loading" :data="mentorList" @selection-change="handleSelectionChange">
             <!-- <el-table-column type="selection" width="55" align="center" /> -->
-            <el-table-column label="导师ID" align="center" prop="mentorId" />
             <el-table-column label="导师姓名" align="center" prop="name" />
             <el-table-column label="导师邮箱" align="center" prop="email" />
             <el-table-column label="研究领域" align="center" prop="researchArea" />
@@ -53,11 +52,25 @@
                         v-hasPermi="['doubleSelection:mentor:edit']">修改</el-button>
                     <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
                         v-hasPermi="['doubleSelection:mentor:remove']">删除</el-button>
-                    <el-button size="small" type="primary" @click="handleSelect(scope.row)">选择</el-button>
-                    <el-button size="small" type="primary" @click="handleCancel(scope.row)">取消选择</el-button>
+                    <el-button size="small" type="text" @click="handleSelect(scope.row)"
+                        style="text-decoration: underline;">选择</el-button>
+                    <el-button size="small" type="text" @click="handleCancel(scope.row)"
+                        style="text-decoration: underline;">取消选择</el-button>
+                    <el-button size="small" type="text" @click="dialogVisible2 = true"
+                        style="text-decoration: underline;">发送信息</el-button>
+                    <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
 
+
+                        <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
+                        </el-input>
+                        <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
+                        <span slot="footer" class="dialog-footer">
+
+                        </span>
+                    </el-dialog>
                 </template>
             </el-table-column>
+
         </el-table>
 
         <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum"
@@ -90,6 +103,7 @@
 <script>
 import { listMentor, getMentor, delMentor, addMentor, updateMentor } from "@/api/doubleSelection/mentor";
 import { cancelSelectionMentor, selectionMentor } from "../../../api/doubleSelection/mentor";
+import { sendMessage } from "../../../api/messageBoard";
 
 export default {
     name: "Mentor",
@@ -105,10 +119,13 @@ export default {
             multiple: true,
             // 显示搜索条件
             showSearch: true,
+            textarea2: '',
             // 总条数
             total: 0,
             // 导师表格数据
             mentorList: [],
+            dialogVisible2: false,
+
             // 弹出层标题
             title: "",
             // 是否显示弹出层
@@ -144,6 +161,20 @@ export default {
         this.getList();
     },
     methods: {
+
+        handleSend(row) {
+            const mentorId = row.mentorId
+            sendMessage({ "receiverId": mentorId, "messageContent": this.textarea2 }).then(response => {
+                this.$modal.msgSuccess("发送成功");
+            })
+        },
+        handleClose(done) {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    done();
+                })
+                .catch(_ => { });
+        },
         /** 查询导师列表 */
         getList() {
             this.loading = true;
@@ -260,3 +291,18 @@ export default {
     }
 };
 </script>
+
+<style>
+.el-dialog {
+    width: 500px;
+    height: 500px;
+}
+
+.el-textarea {
+    height: 300px;
+
+    :deep(.el-textarea__inner) {
+        height: 300px;
+    }
+}
+</style>
