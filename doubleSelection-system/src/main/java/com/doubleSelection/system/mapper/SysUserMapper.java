@@ -1,6 +1,8 @@
 package com.doubleSelection.system.mapper;
 
 import java.util.List;
+
+import com.doubleSelection.doubleSelection.domain.DTO.UpdateUserDetailDTO;
 import org.apache.ibatis.annotations.Param;
 import com.doubleSelection.common.core.domain.entity.SysUser;
 
@@ -126,4 +128,8 @@ public interface SysUserMapper
     public SysUser checkEmailUnique(String email);
 
     void deleteAllUser();
+
+    void updateUserDetail(UpdateUserDetailDTO updateUserDetailDTO);
+
+    String getDetail(Long userId);
 }

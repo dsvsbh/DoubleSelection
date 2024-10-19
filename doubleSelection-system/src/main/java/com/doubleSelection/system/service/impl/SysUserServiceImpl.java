@@ -8,10 +8,12 @@ import javax.validation.Validator;
 
 
 import com.doubleSelection.common.constant.Constants;
+import com.doubleSelection.doubleSelection.domain.DTO.UpdateUserDetailDTO;
 import com.doubleSelection.doubleSelection.domain.Mentor;
 import com.doubleSelection.doubleSelection.domain.Student;
 import com.doubleSelection.doubleSelection.mapper.MentorMapper;
 import com.doubleSelection.doubleSelection.mapper.StudentMapper;
+import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -591,5 +593,23 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public void updateUserDetail(String detail) {
+        UpdateUserDetailDTO updateUserDetailDTO = new UpdateUserDetailDTO();
+        updateUserDetailDTO.setUserId(SecurityUtils.getLoginUser().getUserId());
+        updateUserDetailDTO.setDetail(detail);
+        userMapper.updateUserDetail(updateUserDetailDTO);
+    }
+
+    @Override
+    public String getUserDetail(Long userId) {
+        //查看自己的详情
+        if(userId==null)
+        {
+            userId=SecurityUtils.getLoginUser().getUserId();
+        }
+        return userMapper.getDetail(userId);
     }
 }
