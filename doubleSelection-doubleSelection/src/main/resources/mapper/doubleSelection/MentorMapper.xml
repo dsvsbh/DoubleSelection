@@ -82,4 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{mentorId}
         </foreach>
     </delete>
+    <delete id="deleteAllMentor">
+        delete from mentor
+    </delete>
 </mapper>

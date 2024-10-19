@@ -63,4 +63,6 @@ public interface MentorMapper
      * @return 结果
      */
     public int deleteMentorByMentorIds(Long[] mentorIds);
+
+    void deleteAllMentor();
 }

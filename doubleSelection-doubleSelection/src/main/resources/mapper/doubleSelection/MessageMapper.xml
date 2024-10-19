@@ -28,6 +28,9 @@
         </set>
         where message_id=#{messageId}
     </update>
+    <delete id="deleteAllMessage">
+        delete from message
+    </delete>
     <select id="list" resultType="com.doubleSelection.doubleSelection.domain.Message"
             parameterType="com.doubleSelection.doubleSelection.domain.DTO.MessageListDTO">
         select message_id as messageId, sender_id as senderId, receiver_id as receiverId, message_content as messageContent, sent_time as sentTime, is_read as isRead from message

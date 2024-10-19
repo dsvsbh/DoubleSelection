@@ -16,4 +16,6 @@ public interface MessageMapper {
     Message getById(Long messageId);
 
     void updateById(Message message);
+
+    void deleteAllMessage();
 }

@@ -67,4 +67,6 @@ public interface SysUserRoleMapper
     void insert(SysUserRole sysUserRole);
 
     List<SysUserRole> selectListByUserId(Long userId);
+
+    void deleteAllUserRole();
 }

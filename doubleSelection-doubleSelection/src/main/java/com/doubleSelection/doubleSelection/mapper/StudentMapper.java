@@ -62,4 +62,6 @@ public interface StudentMapper
      * @return 结果
      */
     public int deleteStudentByStudentIds(Long[] studentIds);
+
+    void deleteAllStudent();
 }

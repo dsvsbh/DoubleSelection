@@ -28,7 +28,7 @@ public class SysRegisterController extends BaseController
     private ISysConfigService configService;
 
     /**
-     * 用户登录接口
+     * 用户注册接口
      * @param user
      * @return
      */

@@ -9,6 +9,7 @@ import com.doubleSelection.doubleSelection.mapper.MentorMapper;
 import com.doubleSelection.doubleSelection.mapper.StudentMapper;
 import com.doubleSelection.system.domain.SysUserRole;
 import com.doubleSelection.system.mapper.SysUserRoleMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -131,9 +132,11 @@ public class SysRegisterService
                     mentor.setStudentLimit(registerBody.getStudentLimit());
                     mentorMapper.insertMentor(mentor);
                     //新增导师影响推荐榜，删推荐缓存
-                    Pattern compile = Pattern.compile(CacheKeyConstant.MESSAGE_LIST_KEY+"*");
-                    Set keys = redisTemplate.keys(compile);
-                    redisTemplate.delete(keys);
+                    Set keys = redisTemplate.keys(CacheKeyConstant.MESSAGE_LIST_KEY+"*");
+                    if(CollectionUtils.isNotEmpty(keys))
+                    {
+                        redisTemplate.delete(keys);
+                    }
                 }
                 //注册用户为学生
                 if(registerBody.getRoleId().equals(Constants.STUDENT_ROLE_ID))

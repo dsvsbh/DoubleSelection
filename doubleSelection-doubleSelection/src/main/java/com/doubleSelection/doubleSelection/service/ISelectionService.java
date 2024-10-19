@@ -18,4 +18,6 @@ public interface ISelectionService {
     void reject(Long studentId);
 
     PageResult<SelectionResultVO> result(PageDTO pageDTO);
+
+    void deleteFailSelection();
 }

@@ -14,4 +14,8 @@ public interface StudentMentorSelectionMapper {
     void delete(StudentMentorSelection selection);
 
     void update(StudentMentorSelection selection);
+
+    void deleteFailSelection();
+
+    void deleteAllSelection();
 }

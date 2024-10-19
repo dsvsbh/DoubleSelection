@@ -17,6 +17,7 @@ import com.doubleSelection.doubleSelection.service.ISelectionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -147,9 +148,11 @@ public class SelectionServiceImpl implements ISelectionService {
          selection.setSelectionId(list.get(0).getSelectionId());
          studentMentorSelectionMapper.update(selection);
          //导师双选后名额减少，影响导师推荐榜，因此需要删除推荐的缓存
-        Pattern compile = Pattern.compile(CacheKeyConstant.MESSAGE_LIST_KEY+"*");
-        Set keys = redisTemplate.keys(compile);
-        redisTemplate.delete(keys);
+        Set keys = redisTemplate.keys(CacheKeyConstant.MESSAGE_LIST_KEY+"*");
+        if(CollectionUtils.isNotEmpty(keys))
+        {
+            redisTemplate.delete(keys);
+        }
     }
 
     @Override
@@ -254,5 +257,13 @@ public class SelectionServiceImpl implements ISelectionService {
         result.setPageSize(pageInfo.getPageSize());
         result.setRecords(collect);
         return result;
+    }
+
+    /**
+     * 删除未双选的记录
+     */
+    @Override
+    public void deleteFailSelection() {
+        studentMentorSelectionMapper.deleteFailSelection();
     }
 }

@@ -33,6 +33,12 @@
     <delete id="delete" parameterType="com.doubleSelection.doubleSelection.domain.StudentMentorSelection">
             delete from student_mentor_selection where selection_id=#{selectionId}
     </delete>
+    <delete id="deleteFailSelection">
+        delete from student_mentor_selection where status in (0,2)
+    </delete>
+    <delete id="deleteAllSelection">
+        delete from student_mentor_selection
+    </delete>
 
 
     <select id="list" resultType="com.doubleSelection.doubleSelection.domain.StudentMentorSelection"
