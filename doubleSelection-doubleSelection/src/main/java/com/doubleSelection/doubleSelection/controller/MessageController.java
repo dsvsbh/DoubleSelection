@@ -78,4 +78,10 @@ public class MessageController {
         }
         return result;
     }
+    @DeleteMapping
+    @ApiOperation("清除已读留言")
+    public void deleteMessage()
+    {
+        messageService.deleteMessage();
+    }
 }

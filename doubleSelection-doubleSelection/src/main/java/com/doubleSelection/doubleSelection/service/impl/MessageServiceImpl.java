@@ -101,4 +101,10 @@ public class MessageServiceImpl implements IMessageService {
         }
         return message;
     }
+
+    @Override
+    public void deleteMessage() {
+        Long receiverId = SecurityUtils.getLoginUser().getUserId();
+        messageMapper.deleteReadMessage(receiverId);
+    }
 }

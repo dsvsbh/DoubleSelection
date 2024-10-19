@@ -18,4 +18,6 @@ public interface MessageMapper {
     void updateById(Message message);
 
     void deleteAllMessage();
+
+    void deleteReadMessage(Long receiverId);
 }

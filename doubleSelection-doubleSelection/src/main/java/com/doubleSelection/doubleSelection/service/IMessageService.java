@@ -12,4 +12,6 @@ public interface IMessageService {
     PageResult<MessageListVO> messageList(MessageListDTO dto);
 
     Message messageDetail(Long messageId);
+
+    void deleteMessage();
 }
