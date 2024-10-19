@@ -17,6 +17,45 @@
                 <!-- <el-tooltip content="文档地址" effect="dark" placement="bottom">
                     <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
                 </el-tooltip> -->
+                <el-button icon="el-icon-chat-line-round" type="text" style="font-size: 28px;"
+                    class="right-menu-item hover-effect" @click="dialogTableVisible = true"></el-button>
+
+
+
+                <el-dialog title="用户留言" :visible.sync="dialogTableVisible">
+                    <el-table :data="gridData">
+                        <el-table-column property="date" label="日期" width="150"></el-table-column>
+                        <el-table-column property="name" label="姓名" width="200"></el-table-column>
+                        <el-table-column property="address" label="信息"></el-table-column>
+                        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                            <template slot-scope="scope">
+                                <!-- todo 修改函数 -->
+                                <el-button size="small" type="text" @click="dialogVisible1 = true"
+                                    style="text-decoration: underline;">查看全部信息</el-button>
+                                <el-button size="small" type="text" @click="dialogVisible2 = true"
+                                    style="text-decoration: underline;">回复</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-pagination v-show="total > 0" :total="total" :page.sync="messageBoard.pageNum"
+                        :limit.sync="messageBoard.pageSize" @pagination="getList" />
+                </el-dialog>
+                <el-dialog title="提示" :visible.sync="dialogVisible1" width="30%" :before-close="handleClose">
+                    <span>这是一段信息</span>
+                    <span slot="footer" class="dialog-footer">
+
+                    </span>
+                </el-dialog>
+                <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
+
+
+                    <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
+                    </el-input>
+                    <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
+                    <span slot="footer" class="dialog-footer">
+
+                    </span>
+                </el-dialog>
 
                 <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -24,6 +63,7 @@
                     <size-select id="size-select" class="right-menu-item hover-effect" />
                 </el-tooltip>
  -->
+
             </template>
 
             <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -59,6 +99,45 @@ import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
 
 export default {
+    data() {
+        return {
+            gridData: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }],
+            dialogTableVisible: false,
+            dialogVisible1: false,
+            dialogVisible2: false,
+            textarea2: "",
+            total: 0,
+            queryParams: {
+                pageNum: 1,
+                pageSize: 5,
+
+
+            },
+            messageBoard: {
+                senderId: -1,
+                isRead: false,
+                pageNum: 0,
+                pageSize: 0,
+
+            }
+        }
+    },
     components: {
         Breadcrumb,
         TopNav,
@@ -93,6 +172,16 @@ export default {
         }
     },
     methods: {
+        getList() {
+
+        },
+        handleClose(done) {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    done();
+                })
+                .catch(_ => { });
+        },
         toggleSideBar() {
             this.$store.dispatch('app/toggleSideBar')
         },
