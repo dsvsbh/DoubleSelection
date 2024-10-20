@@ -43,9 +43,9 @@
                         v-hasPermi="['doubleSelection:student:edit']">修改</el-button>
                     <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
                         v-hasPermi="['doubleSelection:student:remove']">删除</el-button>
-                    <el-button v-if="scope.row.status == 0" size="small" type="primary"
+                    <el-button v-if="scope.row.status == 0" size="small" type="text" style="text-decoration: underline;"
                         @click="handleAccept(scope.row)">同意</el-button>
-                    <el-button v-if="scope.row.status == 0" size="small" type="primary"
+                    <el-button v-if="scope.row.status == 0" size="small" type="text" style="text-decoration: underline;"
                         @click="handleReject(scope.row)">拒绝</el-button>
                 </template>
             </el-table-column>
