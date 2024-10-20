@@ -57,6 +57,8 @@
                         style="text-decoration: underline;">取消选择</el-button>
                     <el-button size="small" type="text" @click="dialogVisible2 = true"
                         style="text-decoration: underline;">发送信息</el-button>
+                    <el-button size="small" type="text" @click="dialogVisible3 = true"
+                        style="text-decoration: underline;">个人简介</el-button>
                     <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
 
 
@@ -124,6 +126,7 @@ export default {
             // 导师表格数据
             mentorList: [],
             dialogVisible2: false,
+            dialogVisible3: false,
 
             // 弹出层标题
             title: "",

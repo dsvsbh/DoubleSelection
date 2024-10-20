@@ -23,7 +23,7 @@
 
 
                 <el-dialog title="用户留言" :visible.sync="dialogTableVisible">
-                    <el-button size="small" type="text" style="text-decoration: underline;margin-left: 500px;"
+                    <el-button size="small" type="text" style="text-decoration: underline;margin-left: 300px;"
                         @click="handleDelete()">删除全部已读消息</el-button>
                     <el-table :data="messagelist">
                         <el-table-column property="sentTime" label="时间" width="150"></el-table-column>

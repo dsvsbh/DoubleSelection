@@ -90,8 +90,8 @@
 
 <script>
 import { listMentor, getMentor, delMentor, addMentor, updateMentor } from "@/api/doubleSelection/mentor";
-import { cancelSelectionMentor, selectionMentor } from "../../../api/doubleSelection/mentor";
-import { getRecommend } from "../../../api/doubleSelection/currentActivity";
+import { cancelSelectionMentor, selectionMentor } from "@/api/doubleSelection/mentor";
+import { getRecommend } from "@/api/doubleSelection/currentActivity";
 
 export default {
     name: "Mentor",
