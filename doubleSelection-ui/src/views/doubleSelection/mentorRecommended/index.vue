@@ -285,3 +285,17 @@ export default {
     }
 };
 </script>
+<style>
+.el-dialog {
+    width: 500px;
+    height: 500px;
+}
+
+.el-textarea {
+    height: 300px;
+
+    :deep(.el-textarea__inner) {
+        height: 300px;
+    }
+}
+</style>

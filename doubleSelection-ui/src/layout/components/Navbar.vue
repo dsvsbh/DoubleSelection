@@ -23,41 +23,50 @@
 
 
                 <el-dialog title="用户留言" :visible.sync="dialogTableVisible">
-                    <el-table :data="gridData">
-                        <el-table-column property="date" label="日期" width="150"></el-table-column>
-                        <el-table-column property="name" label="姓名" width="200"></el-table-column>
-                        <el-table-column property="address" label="信息"></el-table-column>
+                    <el-button size="small" type="text" style="text-decoration: underline;margin-left: 500px;"
+                        @click="handleDelete()">删除全部已读消息</el-button>
+                    <el-table :data="messagelist">
+                        <el-table-column property="sentTime" label="时间" width="150"></el-table-column>
+                        <el-table-column property="senderName" label="姓名" width="100"></el-table-column>
+                        <el-table-column property="messageContent" label="信息"></el-table-column>
+                        <el-table-column property="isRead" label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.isRead" style="color:#008000;">已读</span>
+                                <span v-else style="color: #D3D3D3;">未读</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                             <template slot-scope="scope">
-                                <!-- todo 修改函数 -->
-                                <el-button size="small" type="text" @click="dialogVisible1 = true"
-                                    style="text-decoration: underline;">查看全部信息</el-button>
+
+                                <el-button size="small" type="text" @click="handleMessageDetail(scope.row.messageId)"
+                                    style="text-decoration: underline;">详情</el-button>
                                 <el-button size="small" type="text" @click="dialogVisible2 = true"
                                     style="text-decoration: underline;">回复</el-button>
+
+                                <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%"
+                                    :before-close="handleClose" append-to-body>
+                                    <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
+                                    </el-input>
+                                    <el-button type="primary" style="width: 100%;"
+                                        @click="handleSend(scope.row)">发送</el-button>
+                                    <span slot="footer" class="dialog-footer">
+
+                                    </span>
+                                </el-dialog>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination v-show="total > 0" :total="total" :page.sync="messageBoard.pageNum"
-                        :limit.sync="messageBoard.pageSize" @pagination="getList" />
+                    <pagination v-show="total > 0" :total="total" :page.sync="messageBoard.pageNum"
+                        :limit.sync="messageBoard.pageSize" @pagination="getList" :page-sizes="[5, 10, 15, 30]" />
                 </el-dialog>
-                <el-dialog title="提示" :visible.sync="dialogVisible1" width="30%" :before-close="handleClose">
-                    <span>这是一段信息</span>
-                    <span slot="footer" class="dialog-footer">
-
-                    </span>
-                </el-dialog>
-                <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
-
-
-                    <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
-                    </el-input>
-                    <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
+                <el-dialog title=" 详细信息" :visible.sync="dialogVisible1" width="30%" :before-close="handleClose">
+                    <span style="line-height: 1.5px;">{{ messageDetailText }}</span>
                     <span slot="footer" class="dialog-footer">
 
                     </span>
                 </el-dialog>
 
-                <screenfull id="screenfull" class="right-menu-item hover-effect" />
+                <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
 
                 <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
                     <size-select id="size-select" class="right-menu-item hover-effect" />
@@ -97,45 +106,23 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import { deleteMessage, messageDetail, messageList, sendMessage } from '../../api/messageBoard'
 
 export default {
     data() {
         return {
-            gridData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }],
             dialogTableVisible: false,
             dialogVisible1: false,
             dialogVisible2: false,
             textarea2: "",
+            messageDetailText: '',
             total: 0,
-            queryParams: {
+
+            messageBoard: {
                 pageNum: 1,
                 pageSize: 5,
-
-
             },
-            messageBoard: {
-                senderId: -1,
-                isRead: false,
-                pageNum: 0,
-                pageSize: 0,
-
-            }
+            messagelist: []
         }
     },
     components: {
@@ -171,16 +158,47 @@ export default {
             }
         }
     },
+    created() {
+        this.getList()
+    },
     methods: {
-        getList() {
 
+        handleSend(row) {
+            sendMessage({ receiverId: row.senderId, messageContent: this.textarea2 }).then(response => {
+                this.$modal.msgSuccess("发送成功");
+            })
+            this.dialogVisible2 = false
+        },
+        handleMessageDetail(messageId) {
+            this.dialogVisible1 = true
+            messageDetail(messageId).then(response => {
+                this.messageDetailText = response.messageContent
+            })
+        },
+        getList() {
+            this.loading = true
+            messageList(this.messageBoard).then(response => {
+                this.messagelist = response.records
+                this.total = response.total
+                this.loading = false
+            });
         },
         handleClose(done) {
+            this.getList()
             this.$confirm('确认关闭？')
                 .then(_ => {
                     done();
                 })
                 .catch(_ => { });
+            // this.dialogVisible2 = false
+            // this.dialogVisible1 = false
+            this.textarea2 = ""
+        },
+        handleDelete() {
+            deleteMessage().then(response => {
+                this.$modal.msgSuccess("删除成功")
+            })
+            this.getList()
         },
         toggleSideBar() {
             this.$store.dispatch('app/toggleSideBar')

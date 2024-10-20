@@ -37,7 +37,6 @@
                 <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport"
                     v-hasPermi="['doubleSelection:mentor:export']">导出</el-button>
             </el-col>
-            <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
         <el-table v-loading="loading" :data="mentorList" @selection-change="handleSelectionChange">
@@ -174,6 +173,9 @@ export default {
                     done();
                 })
                 .catch(_ => { });
+            this.textarea2 = ""
+            this.dialogVisible2 = false
+
         },
         /** 查询导师列表 */
         getList() {

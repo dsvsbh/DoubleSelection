@@ -44,6 +44,22 @@
             <el-table-column label="学生邮箱" align="center" prop="email" />
             <el-table-column label="专业" align="center" prop="major" />
             <el-table-column label="研究兴趣" align="center" prop="interests" />
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                <template slot-scope="scope">
+                    <el-button size="small" type="text" @click="dialogVisible2 = true"
+                        style="text-decoration: underline;">发送信息</el-button>
+                    <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
+
+                        <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
+                        </el-input>
+                        <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
+                        <span slot="footer" class="dialog-footer">
+
+                        </span>
+                    </el-dialog>
+                </template>
+            </el-table-column>
+
 
         </el-table>
 
@@ -76,11 +92,14 @@
 
 <script>
 import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/doubleSelection/student";
+import { sendMessage } from "../../../api/messageBoard";
 
 export default {
     name: "Student",
     data() {
         return {
+            dialogVisible2: false,
+            textarea2: "",
             // 遮罩层
             loading: true,
             // 选中数组
@@ -206,6 +225,23 @@ export default {
                     }
                 }
             });
+        },
+
+        handleSend(row) {
+            // console.log(row.studentId);
+
+            sendMessage({ "receiverId": row.studentId, "messageContent": this.textarea2 }).then(response => {
+                this.$modal.msgSuccess("发送成功");
+            })
+        },
+        handleClose(done) {
+            this.textarea2 = ""
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    done();
+                })
+                .catch(_ => { });
+
         },
         /** 删除按钮操作 */
         handleDelete(row) {
