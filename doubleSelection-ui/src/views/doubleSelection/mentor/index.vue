@@ -55,7 +55,8 @@
                         style="text-decoration: underline;">选择</el-button>
                     <el-button size="small" type="text" @click="handleCancel(scope.row)"
                         style="text-decoration: underline;">取消选择</el-button>
-                    <el-button size="small" type="text" @click="dialogVisible2 = true"
+                    <el-button size="small" type="text"
+                        @click="() => { dialogVisible2 = true; rowId = scope.row.mentorId }"
                         style="text-decoration: underline;">发送信息</el-button>
                     <el-button size="small" type="text" @click="handleIntroduce(scope.row)"
                         style="text-decoration: underline;">个人简介</el-button>
@@ -64,7 +65,7 @@
 
                         <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
                         </el-input>
-                        <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
+                        <el-button type="primary" style="width: 100%;" @click="handleSend()">发送</el-button>
                         <span slot="footer" class="dialog-footer">
 
                         </span>
@@ -120,6 +121,7 @@ export default {
             loading: true,
             // 选中数组
             ids: [],
+            rowId: -1,
             // 非单个禁用
             single: true,
             // 非多个禁用
@@ -171,17 +173,20 @@ export default {
     },
     methods: {
         handleIntroduce(row) {
+            console.log(row.mentorId);
 
-            findIntroduce(row.mentorId).then(response => {
+            findIntroduce({ "userId": row.mentorId }).then(response => {
                 this.textIntroduce = response
+                this.dialogVisible3 = true
             })
-            this.dialogVisible3 = true
         },
         handleSend(row) {
-            const mentorId = row.mentorId
-            sendMessage({ "receiverId": mentorId, "messageContent": this.textarea2 }).then(response => {
+            console.log(this.rowId);
+            sendMessage({ "receiverId": this.rowId, "messageContent": this.textarea2 }).then(response => {
                 this.$modal.msgSuccess("发送成功");
+                this.dialogVisible2 = false
             })
+
         },
         handleClose(done) {
             this.$confirm('确认关闭？')

@@ -46,7 +46,8 @@
             <el-table-column label="研究兴趣" align="center" prop="interests" />
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
-                    <el-button size="small" type="text" @click="dialogVisible2 = true"
+                    <el-button size="small" type="text"
+                        @click="() => { dialogVisible2 = true; rowId = scope.row.studentId }"
                         style="text-decoration: underline;">发送信息</el-button>
                     <el-button size="small" type="text" @click="handleIntroduce(scope.row)"
                         style="text-decoration: underline;">个人简介</el-button>
@@ -54,7 +55,7 @@
 
                         <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
                         </el-input>
-                        <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
+                        <el-button type="primary" style="width: 100%;" @click="handleSend()">发送</el-button>
                         <span slot="footer" class="dialog-footer">
 
                         </span>
@@ -122,6 +123,7 @@ export default {
             showSearch: true,
             // 总条数
             total: 0,
+            rowId: '',
             // 学生表格数据
             studentList: [],
             // 弹出层标题
@@ -157,10 +159,11 @@ export default {
     },
     methods: {
         handleIntroduce(row) {
-            findIntroduce(row.studentId).then(response => {
+
+            findIntroduce({ "userId": row.studentId }).then(response => {
+                this.dialogVisible3 = true
                 this.textIntroduce = response
             })
-            this.dialogVisible3 = true
         },
         /** 查询学生列表 */
         getList() {
@@ -243,15 +246,16 @@ export default {
             });
         },
 
-        handleSend(row) {
-            // console.log(row.studentId);
+        handleSend() {
 
-            sendMessage({ "receiverId": row.studentId, "messageContent": this.textarea2 }).then(response => {
+            sendMessage({ "receiverId": this.rowId, "messageContent": this.textarea2 }).then(response => {
                 this.$modal.msgSuccess("发送成功");
+                this.dialogVisible2 = false
             })
         },
         handleClose(done) {
             this.textarea2 = ""
+            this.textIntroduce = ""
             this.$confirm('确认关闭？')
                 .then(_ => {
                     done();

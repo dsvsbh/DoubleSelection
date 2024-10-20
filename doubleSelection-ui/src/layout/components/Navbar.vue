@@ -22,8 +22,8 @@
 
 
 
-                <el-dialog title="用户留言" :visible.sync="dialogTableVisible">
-                    <el-button size="small" type="text" style="text-decoration: underline;margin-left: 300px;"
+                <el-dialog title="用户留言" :visible.sync="dialogTableVisible" width="800px">
+                    <el-button size="small" type="text" style="text-decoration: underline;margin-left: 500px;"
                         @click="handleDelete()">删除全部已读消息</el-button>
                     <el-table :data="messagelist">
                         <el-table-column property="sentTime" label="时间" width="150"></el-table-column>
@@ -197,8 +197,8 @@ export default {
         handleDelete() {
             deleteMessage().then(response => {
                 this.$modal.msgSuccess("删除成功")
+                this.getList()
             })
-            this.getList()
         },
         toggleSideBar() {
             this.$store.dispatch('app/toggleSideBar')
