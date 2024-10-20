@@ -70,7 +70,9 @@
                             <resetPwd />
                         </el-tab-pane>
                         <el-tab-pane label="个人简介" name="introduce">
-
+                            <el-input type="textarea" :rows="12" v-model="introduceText" height=200px></el-input>
+                            <el-button type="primary" style="margin-top: 10px; width: 100%;"
+                                @click="handleIntroduce()">保存</el-button>
                         </el-tab-pane>
                     </el-tabs>
                 </el-card>
@@ -84,12 +86,14 @@ import userAvatar from "./userAvatar";
 import userInfo from "./userInfo";
 import resetPwd from "./resetPwd";
 import { getUserProfile } from "@/api/system/user";
+import { editIntroduce, findIntroduce } from "../../../api/messageBoard";
 
 export default {
     name: "Profile",
     components: { userAvatar, userInfo, resetPwd },
     data() {
         return {
+            introduceText: '',
             user: {},
             roleGroup: {},
             postGroup: {},
@@ -98,8 +102,15 @@ export default {
     },
     created() {
         this.getUser();
+        this.getIntroduce();
     },
     methods: {
+        getIntroduce() {
+            findIntroduce().then(response => {
+                this.introduceText = response
+
+            })
+        },
         getUser() {
             getUserProfile().then(response => {
                 this.user = response.data;
@@ -107,6 +118,11 @@ export default {
                 this.postGroup = response.postGroup;
             });
 
+        },
+        handleIntroduce() {
+            editIntroduce({ "detail": this.introduceText }).then(response => {
+                this.$modal.msgSuccess("保存成功");
+            })
         }
     }
 };
