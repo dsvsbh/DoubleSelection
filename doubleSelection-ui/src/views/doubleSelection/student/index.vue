@@ -48,6 +48,8 @@
                 <template slot-scope="scope">
                     <el-button size="small" type="text" @click="dialogVisible2 = true"
                         style="text-decoration: underline;">发送信息</el-button>
+                    <el-button size="small" type="text" @click="handleIntroduce(scope.row)"
+                        style="text-decoration: underline;">个人简介</el-button>
                     <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
 
                         <el-input type="textarea" placeholder="请输入内容" v-model="textarea2" :rows="10">
@@ -55,6 +57,11 @@
                         <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
                         <span slot="footer" class="dialog-footer">
 
+                        </span>
+                    </el-dialog>
+                    <el-dialog title="个人简介" :visible.sync="dialogVisible3" width="30%" :before-close="handleClose">
+                        <span style="line-height: 1.5px;">{{ textIntroduce }}</span>
+                        <span slot="footer" class="dialog-footer">
                         </span>
                     </el-dialog>
                 </template>
@@ -87,18 +94,21 @@
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
+
     </div>
 </template>
 
 <script>
 import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/doubleSelection/student";
-import { sendMessage } from "../../../api/messageBoard";
+import { findIntroduce, sendMessage } from "../../../api/messageBoard";
 
 export default {
     name: "Student",
     data() {
         return {
             dialogVisible2: false,
+            dialogVisible3: false,
+            textIntroduce: '',
             textarea2: "",
             // 遮罩层
             loading: true,
@@ -146,6 +156,12 @@ export default {
         this.getList();
     },
     methods: {
+        handleIntroduce(row) {
+            findIntroduce(row.studentId).then(response => {
+                this.textIntroduce = response
+            })
+            this.dialogVisible3 = true
+        },
         /** 查询学生列表 */
         getList() {
             this.loading = true;

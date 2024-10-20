@@ -50,6 +50,8 @@
                         style="text-decoration: underline;">取消选择</el-button>
                     <el-button size="small" type="text" @click="dialogVisible2 = true"
                         style="text-decoration: underline;">发送信息</el-button>
+                    <el-button size="small" type="text" @click="handleIntroduce(scope.row)"
+                        style="text-decoration: underline;">个人简介</el-button>
                     <el-dialog title="发送信息" :visible.sync="dialogVisible2" width="40%" :before-close="handleClose">
 
 
@@ -58,6 +60,11 @@
                         <el-button type="primary" style="width: 100%;" @click="handleSend(scope.row)">发送</el-button>
                         <span slot="footer" class="dialog-footer">
 
+                        </span>
+                    </el-dialog>
+                    <el-dialog title="个人简介" :visible.sync="dialogVisible3" width="30%" :before-close="handleClose">
+                        <span style="line-height: 1.5px;">{{ textIntroduce }}</span>
+                        <span slot="footer" class="dialog-footer">
                         </span>
                     </el-dialog>
                 </template>
@@ -92,6 +99,7 @@
 import { listMentor, getMentor, delMentor, addMentor, updateMentor } from "@/api/doubleSelection/mentor";
 import { cancelSelectionMentor, selectionMentor } from "@/api/doubleSelection/mentor";
 import { getRecommend } from "@/api/doubleSelection/currentActivity";
+import { findIntroduce } from "../../../api/messageBoard";
 
 export default {
     name: "Mentor",
@@ -107,6 +115,8 @@ export default {
             multiple: true,
             // 显示搜索条件
             showSearch: true,
+            textIntroduce: '',
+            dialogVisible3: false,
             // 总条数
             total: 0,
             // 导师表格数据
@@ -147,19 +157,20 @@ export default {
         this.getList();
     },
     methods: {
+        handleIntroduce(row) {
+
+            findIntroduce(row.mentorId).then(response => {
+                this.textIntroduce = response
+            })
+            this.dialogVisible3 = true
+        },
         handleSend(row) {
             const mentorId = row.mentorId
             sendMessage({ "receiverId": mentorId, "messageContent": this.textarea2 }).then(response => {
                 this.$modal.msgSuccess("发送成功");
             })
         },
-        handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => { });
-        },
+
         handleClose(done) {
 
             this.$confirm('确认关闭？')
