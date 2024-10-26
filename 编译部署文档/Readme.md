@@ -12,12 +12,6 @@
 2. 将项目根目录vscode打开，在vscode的终端输入`npm install`
 3. `npm build`进行打包，生成dist文件即为打包好的文件夹
 
-
-
-
-
-
-
 # 项目部署
 ## 本机部署
 1. 准备好mysql和redis，创建数据库并运行sql文件夹下的sql脚本。
