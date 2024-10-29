@@ -7,7 +7,8 @@ spring:
             # 主库数据源
             master:
 #                url: jdbc:mysql://192.168.177.128:3306/ds   #虚拟机
-                url: jdbc:mysql://118.31.228.221:3306/ds    #阿里云服务器
+#                url: jdbc:mysql://118.31.228.221:3306/ds    #阿里云服务器
+                url: jdbc:mysql://172.16.14.211:3306/ds    #信创
                 username: root
                 password: 123
             # 从库数据源
