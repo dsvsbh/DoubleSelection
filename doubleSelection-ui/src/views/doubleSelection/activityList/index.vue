@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/doubleSelection/student";
+import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "../../../api/doubleSelection/student";
 import { addActivity, listActivity } from "../../../api/doubleSelection/currentActivity";
 export default {
     name: "activityList",

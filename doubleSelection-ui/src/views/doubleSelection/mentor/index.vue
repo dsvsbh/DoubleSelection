@@ -108,9 +108,9 @@
 </template>
 
 <script>
-import { listMentor, getMentor, delMentor, addMentor, updateMentor } from "@/api/doubleSelection/mentor";
-import { cancelSelectionMentor, selectionMentor } from "@/api/doubleSelection/mentor";
-import { sendMessage } from "@/api/messageBoard";
+import { listMentor, getMentor, delMentor, addMentor, updateMentor } from "../../../api/doubleSelection/mentor";
+import { cancelSelectionMentor, selectionMentor } from "../../../api/doubleSelection/mentor";
+import { sendMessage } from "../../../api/messageBoard";
 import { findIntroduce } from "../../../api/messageBoard";
 
 export default {
